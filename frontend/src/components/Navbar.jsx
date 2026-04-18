@@ -1,230 +1,58 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const links = ["Home", "About", "Services", "Contact"];
 
-const pageContent = {
-  Home: {
-    label: "Welcome",
-    title: <>Perfect <em>balance</em> of form &amp; function</>,
-    body: "Every interaction polished, every pixel intentional. This navbar features a pixel-accurate sliding underline, a right-side mobile drawer, and a refined warm typographic palette.",
-    tag: "Crafted with care",
-  },
-  About: {
-    label: "Our story",
-    title: <>Built with <em>purpose</em> in mind</>,
-    body: "Great interfaces feel inevitable — as if they couldn't have been made any other way. We obsess over the details so the product feels effortless.",
-    tag: "Est. 2024",
-  },
-  Services: {
-    label: "What we do",
-    title: <>Work that <em>speaks</em> for itself</>,
-    body: "From strategy to pixel-perfect execution, every service is designed to bring clarity, elegance, and lasting value to what you build.",
-    tag: "Full spectrum",
-  },
-  Contact: {
-    label: "Get in touch",
-    title: <>Let's make something <em>great</em></>,
-    body: "Good projects start with a conversation. Whether you have a brief or just a spark of an idea — we'd love to hear from you.",
-    tag: "Always open",
-  },
-};
 
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+const minimalCss = `
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap');
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: #f5f3ee; min-height: 100vh; }
-
-  .nav-wrapper {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; justify-content: center;
-    padding: 18px 24px 0;
-  }
-  .nav-bar {
-    width: 100%; max-width: 900px;
-    background: rgba(255,252,248,0.88);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 16px;
-    padding: 0 28px;
-    height: 58px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-  }
-  .brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 21px; letter-spacing: -0.3px;
-    color: #1a1714; user-select: none;
-  }
-  .brand em { font-style: italic; color: #b57c3a; }
-
-  .nav-links {
-    display: flex; align-items: center; gap: 2px;
-    position: relative;
-  }
-  .nav-link-btn {
-    background: none; border: none; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 400;
-    color: #7a7570;
-    padding: 6px 16px 8px;
-    border-radius: 8px;
-    transition: color 0.2s, background 0.15s;
-    letter-spacing: 0.01em;
-    position: relative;
-  }
-  .nav-link-btn.active { color: #1a1714; font-weight: 500; }
-  .nav-link-btn:hover:not(.active) { color: #3d3a36; background: rgba(0,0,0,0.04); }
-
-  .slider-line {
+  /* Glowing slider underline */
+  .nav-slider-line {
     position: absolute;
-    bottom: -1px; height: 2px;
-    background: linear-gradient(90deg, #b57c3a, #e2a855);
+    bottom: -1px;
+    height: 2px;
     border-radius: 99px;
-    transition: left 0.32s cubic-bezier(0.4,0,0.2,1), width 0.32s cubic-bezier(0.4,0,0.2,1);
+    background: var(--nav-accent, #e63946);
+    box-shadow: 0 0 8px var(--nav-accent, #e63946);
+    transition: left 0.32s cubic-bezier(0.4,0,0.2,1),
+                width 0.32s cubic-bezier(0.4,0,0.2,1);
     pointer-events: none;
   }
 
-  .hamburger {
-    display: none;
-    background: none; border: none; cursor: pointer;
-    width: 36px; height: 36px;
-    align-items: center; justify-content: center;
-    border-radius: 8px; transition: background 0.15s; color: #1a1714;
-    flex-direction: column; gap: 5px;
-  }
-  .hamburger:hover { background: rgba(0,0,0,0.06); }
-  .hamburger span {
-    display: block; width: 20px; height: 1.5px;
-    background: #1a1714; border-radius: 99px;
-    transition: transform 0.25s, opacity 0.25s;
-    transform-origin: center;
-  }
-  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-  .overlay {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0); pointer-events: none;
-    transition: background 0.3s;
-  }
-  .overlay.open { background: rgba(0,0,0,0.25); pointer-events: auto; }
-
-  .sidebar {
-    position: fixed; top: 0; right: 0; bottom: 0;
-    width: 260px; z-index: 201;
-    background: #fffcf8;
-    border-left: 1px solid rgba(0,0,0,0.08);
+  /* Sidebar slide-in */
+  .nav-sidebar {
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    display: flex; flex-direction: column;
-    box-shadow: -8px 0 32px rgba(0,0,0,0.08);
   }
-  .sidebar.open { transform: translateX(0); }
+  .nav-sidebar.open { transform: translateX(0); }
 
-  .sidebar-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.07);
-  }
-  .sidebar-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 19px; color: #1a1714;
-  }
-  .sidebar-brand em { font-style: italic; color: #b57c3a; }
-  .close-btn {
-    background: none; border: none; cursor: pointer;
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 8px; transition: background 0.15s; color: #7a7570;
-  }
-  .close-btn:hover { background: rgba(0,0,0,0.06); color: #1a1714; }
+  /* Hamburger → X morphs */
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-  .sidebar-links {
-    padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1;
-  }
-  .sidebar-link {
-    background: none; border: none; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; text-align: left;
-    padding: 11px 16px;
-    border-radius: 10px; color: #5a5752;
-    transition: background 0.15s, color 0.15s;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .sidebar-link:hover:not(.active) { background: rgba(0,0,0,0.04); color: #1a1714; }
-  .sidebar-link.active { background: rgba(181,124,58,0.1); color: #8a5a1e; font-weight: 500; }
-  .sidebar-link .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #b57c3a; opacity: 0; transition: opacity 0.2s;
-  }
-  .sidebar-link.active .dot { opacity: 1; }
+  /* Active sidebar dot */
+  .nav-sidebar-link.active .nav-sidebar-dot { opacity: 1; }
+  .nav-sidebar-dot { opacity: 0; transition: opacity 0.2s; }
 
-  .sidebar-footer {
-    padding: 16px 20px;
-    border-top: 1px solid rgba(0,0,0,0.07);
-    font-size: 12px; color: #a09c98;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .main {
-    padding-top: 110px; min-height: 100vh;
-    display: flex; justify-content: center; align-items: flex-start;
-    padding-left: 24px; padding-right: 24px;
-  }
-  .content-card {
-    width: 100%; max-width: 700px;
-    background: #fffcf8;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 20px;
-    padding: 60px 56px;
-    box-shadow: 0 4px 40px rgba(0,0,0,0.05);
-    position: relative; overflow: hidden;
-  }
-  .content-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, #b57c3a, #e2a855, #b57c3a);
-  }
-  .page-label {
-    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: #b57c3a; font-weight: 500; margin-bottom: 12px;
-  }
-  .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 42px; line-height: 1.1; letter-spacing: -1px;
-    color: #1a1714; margin-bottom: 20px;
-  }
-  .page-title em { font-style: italic; color: #b57c3a; }
-  .page-body {
-    font-size: 15px; line-height: 1.8; color: #6b6660; max-width: 420px;
-  }
-  .page-tag {
-    display: inline-block; margin-top: 28px;
-    font-size: 12px; padding: 6px 14px;
-    border-radius: 99px;
-    background: rgba(181,124,58,0.1);
-    color: #8a5a1e; letter-spacing: 0.04em;
-  }
-
-  @media (max-width: 680px) {
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .content-card { padding: 40px 28px; }
-    .page-title { font-size: 32px; }
+  @media (max-width: 720px) {
+    .nav-links-desktop { display: none !important; }
+    .nav-cta-desktop   { display: none !important; }
+    .nav-hamburger     { display: flex !important; }
   }
 `;
 
-function Navbar({ active, setActive }) {
+export default function Navbar({ accent = "#e63946", active, setActive }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [scrolled, setScrolled]       = useState(false);
   const containerRef = useRef(null);
-  const itemRefs = useRef([]);
-  const [lineStyle, setLineStyle] = useState({ left: 0, width: 0 });
+  const itemRefs     = useRef([]);
+  const [lineStyle, setLineStyle]     = useState({ left: 0, width: 0 });
 
+ 
   useEffect(() => {
     const idx = links.indexOf(active);
-    const el = itemRefs.current[idx];
+    const el  = itemRefs.current[idx];
     if (el && containerRef.current) {
       const r = el.getBoundingClientRect();
       const p = containerRef.current.getBoundingClientRect();
@@ -232,25 +60,59 @@ function Navbar({ active, setActive }) {
     }
   }, [active]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <style>{styles}</style>
+      <style>{minimalCss}</style>
 
-      <div className="nav-wrapper">
-        <nav className="nav-bar">
-          <span className="brand">Br<em>a</em>nd</span>
+      {/* ── Wrapper ── */}
+      <div
+        className="fixed top-0 left-0 right-0 z-[200] flex justify-center px-6 pt-[18px] pointer-events-none"
+        style={{ "--nav-accent": accent }}
+      >
+        <nav
+          className={[
+            "w-full max-w-[960px] h-[58px] flex items-center justify-between px-7 rounded-[14px]",
+            "border pointer-events-auto",
+            "shadow-[0_4px_32px_rgba(0,0,0,0.35)]",
+            "transition-[background,border-color] duration-400",
+            scrolled
+              ? "bg-[rgba(10,10,10,0.88)] border-white/[0.07]"
+              : "bg-[rgba(10,10,10,0.45)] border-white/10",
+          ].join(" ")}
+          style={{ backdropFilter: "blur(18px) saturate(1.4)" }}
+        >
+          {/* Logo */}
+          <span
+            className="text-white no-underline select-none text-[22px] tracking-[0.1em]"
+            style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+          >
+            AUTO<span style={{ color: accent }}>LUXE</span>
+          </span>
 
-          {/* Desktop Links */}
-          <div ref={containerRef} className="nav-links">
+          {/* Desktop nav links */}
+          <div ref={containerRef} className="nav-links-desktop relative flex items-center gap-0.5">
             <span
-              className="slider-line"
+              className="nav-slider-line absolute"
               style={{ left: lineStyle.left + "px", width: lineStyle.width + "px" }}
             />
             {links.map((link, i) => (
               <button
                 key={link}
                 ref={(el) => (itemRefs.current[i] = el)}
-                className={`nav-link-btn${active === link ? " active" : ""}`}
+                className={[
+                  "bg-transparent border-none cursor-pointer rounded-lg px-4 pb-2 pt-1.5",
+                  "text-[13px] tracking-[0.04em] uppercase transition-[color,background] duration-200",
+                  "font-['Outfit',sans-serif]",
+                  active === link
+                    ? "text-white font-medium"
+                    : "text-white/55 font-normal hover:text-white/85 hover:bg-white/[0.07]",
+                ].join(" ")}
                 onClick={() => setActive(link)}
               >
                 {link}
@@ -258,66 +120,100 @@ function Navbar({ active, setActive }) {
             ))}
           </div>
 
-          {/* Hamburger */}
-          <button
-            className={`hamburger${sidebarOpen ? " open" : ""}`}
-            onClick={() => setSidebarOpen((o) => !o)}
-            aria-label="Menu"
-          >
-            <span /><span /><span />
-          </button>
+ 
+          <div className="flex items-center gap-3">
+            <button
+              className="nav-cta-desktop text-[11px] font-semibold tracking-[0.12em] uppercase text-white border-none rounded-md px-[18px] py-2 cursor-pointer transition-[opacity,transform] duration-200 hover:opacity-[0.88] hover:-translate-y-px active:translate-y-0"
+              style={{ background: accent, fontFamily: "'Outfit', sans-serif" }}
+            >
+              Get a Quote
+            </button>
+
+            <button
+              className={`nav-hamburger hidden flex-col items-center justify-center gap-[5px] w-[38px] h-[38px] bg-transparent border border-white/[0.18] rounded-lg cursor-pointer transition-[background,border-color] duration-150 hover:bg-white/[0.08] hover:border-white/30`}
+              onClick={() => setSidebarOpen((o) => !o)}
+              aria-label="Menu"
+            >
+              {[0, 1, 2].map((n) => (
+                <span
+                  key={n}
+                  className="block w-[18px] h-[1.5px] bg-white rounded-full transition-[transform,opacity] duration-250"
+                  style={{ transformOrigin: "center" }}
+                />
+              ))}
+            </button>
+          </div>
         </nav>
       </div>
 
-      {/* Overlay */}
       <div
-        className={`overlay${sidebarOpen ? " open" : ""}`}
+        className={[
+          "fixed inset-0 z-[300] transition-[background] duration-300",
+          sidebarOpen ? "bg-black/60 pointer-events-auto" : "bg-transparent pointer-events-none",
+        ].join(" ")}
+        style={{ "--nav-accent": accent }}
         onClick={() => setSidebarOpen(false)}
       />
 
-      {/* Right Sidebar */}
-      <div className={`sidebar${sidebarOpen ? " open" : ""}`}>
-        <div className="sidebar-head">
-          <span className="sidebar-brand">Br<em>a</em>nd</span>
-          <button className="close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+   
+      <div
+        className={`nav-sidebar fixed top-0 right-0 bottom-0 w-[270px] z-[301] flex flex-col border-l border-white/[0.08]${sidebarOpen ? " open" : ""}`}
+        style={{ background: "#0e0e0e", "--nav-accent": accent }}
+      >
+       
+        <div className="flex items-center justify-between px-5 pt-[22px] pb-[18px] border-b border-white/[0.07]">
+          <span
+            className="text-white text-[20px] tracking-[0.1em]"
+            style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+          >
+            AUTO<span style={{ color: accent }}>LUXE</span>
+          </span>
+          <button
+            className="w-8 h-8 flex items-center justify-center bg-transparent border border-white/[0.15] rounded-[7px] cursor-pointer text-white/60 transition-[background,color] duration-150 hover:bg-white/[0.08] hover:text-white"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
         </div>
-        <div className="sidebar-links">
+
+        
+        <div className="flex flex-col gap-1 flex-1 p-3">
           {links.map((link) => (
             <button
               key={link}
-              className={`sidebar-link${active === link ? " active" : ""}`}
+              className={[
+                "nav-sidebar-link flex items-center justify-between w-full bg-transparent border-none",
+                "text-left text-[14px] tracking-[0.08em] uppercase px-4 py-3 rounded-[9px] cursor-pointer",
+                "transition-[background,color] duration-150",
+                "font-['Outfit',sans-serif]",
+                active === link
+                  ? "active bg-white/[0.06] text-white font-medium"
+                  : "text-white/50 hover:bg-white/[0.06] hover:text-white/85",
+              ].join(" ")}
               onClick={() => { setActive(link); setSidebarOpen(false); }}
             >
               {link}
-              <span className="dot" />
+              <span
+                className="nav-sidebar-dot w-[5px] h-[5px] rounded-full"
+                style={{ background: accent }}
+              />
             </button>
           ))}
         </div>
-        <div className="sidebar-footer">Navigation · 2024</div>
+
+        {/* Sidebar footer CTA */}
+        <div className="px-5 py-[18px] border-t border-white/[0.07]">
+          <button
+            className="w-full text-[12px] font-semibold tracking-[0.12em] uppercase text-white border-none rounded-lg py-[13px] px-5 cursor-pointer transition-opacity duration-200 hover:opacity-[0.88]"
+            style={{ background: accent, fontFamily: "'Outfit', sans-serif" }}
+          >
+            Get a Quote
+          </button>
+        </div>
       </div>
     </>
-  );
-}
-
-export default function App() {
-  const [active, setActive] = useState("Home");
-  const p = pageContent[active];
-
-  return (
-    <div>
-      <Navbar active={active} setActive={setActive} />
-      <main className="main">
-        <div className="content-card">
-          <p className="page-label">{p.label}</p>
-          <h2 className="page-title">{p.title}</h2>
-          <p className="page-body">{p.body}</p>
-          <span className="page-tag">{p.tag}</span>
-        </div>
-      </main>
-    </div>
   );
 }
