@@ -1,12 +1,6 @@
-
----
-
 # PROMPTS.md
 
-```md
-# PROMPTS.md
-
-These are actual prompts used while building this project.
+These are actual prompts used while building this project, along with honest reflections on what worked, what didn't, and how I improved them.
 
 ---
 
@@ -16,7 +10,8 @@ These are actual prompts used while building this project.
 
 **Worked first time?**  
 No  
-**Fix:** Had to explicitly define schema and give examples.
+**Fix:** Had to explicitly define schema and give examples.  
+**Reflection:** I learned that AI needs clear structure. I added a JSON schema example and specific field definitions, which made the output much more consistent.
 
 ---
 
@@ -26,7 +21,8 @@ No
 
 **Worked first time?**  
 Yes  
-**Fix:** None
+**Fix:** None  
+**Reflection:** This worked well because I had already established a clear schema in the previous prompt. Consistency in data structure is key.
 
 ---
 
@@ -36,7 +32,8 @@ Yes
 
 **Worked first time?**  
 Mostly  
-**Fix:** Needed edge-case handling (null filters)
+**Fix:** Needed edge-case handling (null filters)  
+**Reflection:** I realized I needed to think about real-world scenarios. I added null checks and default behaviors to make the function more robust.
 
 ---
 
@@ -46,7 +43,8 @@ Mostly
 
 **Worked first time?**  
 Yes  
-**Fix:** None
+**Fix:** None  
+**Reflection:** This was straightforward once I remembered React's useRef hook. Sometimes the simplest solutions work best.
 
 ---
 
@@ -56,7 +54,8 @@ Yes
 
 **Worked first time?**  
 No  
-**Fix:** Needed controlled components instead of uncontrolled inputs
+**Fix:** Needed controlled components instead of uncontrolled inputs  
+**Reflection:** I learned the importance of controlled components in React. Uncontrolled inputs don't update properly with state changes.
 
 ---
 
@@ -66,7 +65,8 @@ No
 
 **Worked first time?**  
 Yes  
-**Fix:** Added global currency state later
+**Fix:** Added global currency state later  
+**Reflection:** Starting simple worked well. I could add complexity (global state) later as needed.
 
 ---
 
@@ -76,7 +76,8 @@ Yes
 
 **Worked first time?**  
 Partially  
-**Fix:** Needed normalization of specs structure
+**Fix:** Needed normalization of specs structure  
+**Reflection:** I learned that data normalization is crucial for comparison operations. I had to standardize the car specs format first.
 
 ---
 
@@ -86,7 +87,8 @@ Partially
 
 **Worked first time?**  
 No  
-**Fix:** Too generic — rewrote with explicit rules
+**Fix:** Too generic — rewrote with explicit rules  
+**Reflection:** Vague prompts lead to vague results. I learned to be specific about the recommendation criteria and rules.
 
 ---
 
@@ -96,7 +98,8 @@ No
 
 **Worked first time?**  
 Yes  
-**Fix:** Styling adjustments only
+**Fix:** Styling adjustments only  
+**Reflection:** Clear visual requirements help. I specified the exact UI behavior and it worked well.
 
 ---
 
@@ -106,10 +109,20 @@ Yes
 
 **Worked first time?**  
 No  
-**Fix:** Switched to centralized state management
+**Fix:** Switched to centralized state management  
+**Reflection:** I learned that complex state synchronization needs proper architecture. Local state wasn't enough for cross-component updates.
 
 ---
 
 ## Key Realization
 
-Vague prompts waste time. The more structured your prompt, the fewer iterations you need.
+**Vague prompts waste time. The more structured your prompt, the fewer iterations you need.**
+
+I learned that successful AI prompting is like writing good code:
+- Be specific about inputs and outputs
+- Define clear schemas and structures
+- Think about edge cases upfront
+- Start simple, then add complexity
+- Test and iterate based on results
+
+The most valuable lesson was that prompt engineering is a skill that improves with practice and honest reflection on what works and what doesn't.
