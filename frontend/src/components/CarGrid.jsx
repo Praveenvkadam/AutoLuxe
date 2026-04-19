@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { allCars, typeMap, priceMap, badgeCfg, typeCfg } from "../data/cars.js";
 
 function parsePrice(str) {
-  return parseInt(str.replace(/[$,]/g, ""), 10);
+  const m = str.replace(/[₹,\s]/g, "").match(/([\d.]+)L/i);
+  return m ? parseFloat(m[1]) : 0;
 }
 
 function formatDate(date) {
   return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
-/* ── Booking Modal ───────────────────────────────────────────── */
 function BookingModal({ car, onClose }) {
   const [form, setForm]           = useState({ name: "", address: "", contact: "" });
   const [errors, setErrors]       = useState({});
@@ -135,9 +135,9 @@ function BookingModal({ car, onClose }) {
 
             <div style={{ padding: "20px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                { key: "name",    label: "Full Name",      placeholder: "Enter your full name",        type: "text" },
-                { key: "address", label: "Address",        placeholder: "Enter your delivery address",  type: "text" },
-                { key: "contact", label: "Contact Number", placeholder: "+91 00000 00000",              type: "tel"  },
+                { key: "name",    label: "Full Name",      placeholder: "Enter your full name",       type: "text" },
+                { key: "address", label: "Address",        placeholder: "Enter your delivery address", type: "text" },
+                { key: "contact", label: "Contact Number", placeholder: "+91 00000 00000",             type: "tel"  },
               ].map(({ key, label, placeholder, type }) => (
                 <div key={key}>
                   <label style={{ display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: errors[key] ? "#ef4444" : "#555", marginBottom: 5 }}>
@@ -241,11 +241,9 @@ function BookingModal({ car, onClose }) {
   );
 }
 
-/* ── CarCard ─────────────────────────────────────────────────── */
 function CarCard({ car, visible, onBook, isHighlighted }) {
   const cardRef = useRef(null);
 
-  // Scroll highlighted card into view
   useEffect(() => {
     if (isHighlighted && visible && cardRef.current) {
       setTimeout(() => {
@@ -273,7 +271,6 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
           : undefined,
       }}
     >
-      {/* AutoMate spotlight badge */}
       {isHighlighted && (
         <div style={{
           position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)",
@@ -297,7 +294,6 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
         </div>
       )}
 
-      {/* Image */}
       <div className="relative h-48 overflow-hidden bg-black">
         <img
           src={car.image}
@@ -331,7 +327,6 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
         </div>
       </div>
 
-      {/* Body */}
       <div className="flex flex-col flex-1 p-4 gap-3.5">
         <div>
           <p className="text-[9px] font-bold tracking-[0.28em] uppercase text-gray-600 mb-1">{car.brand}</p>
@@ -345,9 +340,9 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
 
         <div className="grid grid-cols-3 divide-x divide-white/[0.06] border border-white/[0.06]">
           {[
-            { label: "0–100 KM/H", value: car.acc,   unit: "S"    },
-            { label: "Max Power",  value: car.hp,     unit: ""      },
-            { label: "Top Speed",  value: car.speed,  unit: "KM/H" },
+            { label: "0–100 KM/H", value: car.acc,  unit: "S"    },
+            { label: "Max Power",  value: car.hp,    unit: ""     },
+            { label: "Top Speed",  value: car.speed, unit: "KM/H" },
           ].map(({ label, value, unit }) => (
             <div key={label} className="flex flex-col items-center py-2.5 px-1 gap-0.5">
               <span className="text-orange-500 text-sm font-bold leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
@@ -384,7 +379,6 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
         </div>
       </div>
 
-      {/* Bottom accent — teal when highlighted, orange on hover */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[2px] transition-transform duration-500 origin-center"
         style={{
@@ -401,16 +395,14 @@ function CarCard({ car, visible, onBook, isHighlighted }) {
   );
 }
 
-/* ── Grid ────────────────────────────────────────────────────── */
 export default function CarGrid({ filters, searchVal, highlightCarId, onClearHighlight }) {
   const [displayedCars, setDisplayedCars] = useState(allCars);
   const [visibleMap, setVisibleMap]       = useState({});
   const [bookingCar, setBookingCar]       = useState(null);
-  const [isSpotlight, setIsSpotlight]     = useState(false); // true = showing only the highlighted car
+  const [isSpotlight, setIsSpotlight]     = useState(false);
   const prevFilters = useRef(null);
   const sectionRef  = useRef(null);
 
-  /* When highlightCarId changes, switch to spotlight mode */
   useEffect(() => {
     if (highlightCarId) {
       const car = allCars.find(c => c.id === highlightCarId);
@@ -428,7 +420,6 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
   function exitSpotlight() {
     setIsSpotlight(false);
     onClearHighlight?.();
-    // Re-apply current filters
     const next = applyFilters(filters, searchVal);
     setVisibleMap({});
     setTimeout(() => {
@@ -447,7 +438,8 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
       const mappedType = typeMap[f.carType];
       if (mappedType && car.type !== mappedType) return false;
       const [min, max] = priceMap[f.priceRange] ?? [0, Infinity];
-      if (parsePrice(car.price) < min || parsePrice(car.price) > max) return false;
+      const val = parsePrice(car.price);
+      if (val < min || val > max) return false;
       if (search) {
         const q = search.toLowerCase();
         if (!car.brand.toLowerCase().includes(q) && !car.model.toLowerCase().includes(q)) return false;
@@ -457,7 +449,7 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
   }
 
   useEffect(() => {
-    if (isSpotlight) return; // Don't re-filter while in spotlight mode
+    if (isSpotlight) return;
     const next = applyFilters(filters, searchVal);
     const same = JSON.stringify(prevFilters.current) === JSON.stringify({ filters, searchVal });
     if (same) return;
@@ -481,8 +473,8 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
   }, []);
 
   const isFiltered = !isSpotlight && (
-    filters.brand !== "All Brands"    ||
-    filters.carType !== "All Types"   ||
+    filters.brand !== "All Brands"     ||
+    filters.carType !== "All Types"    ||
     filters.priceRange !== "Any Price" ||
     searchVal.trim() !== ""
   );
@@ -496,7 +488,6 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
           style={{ background: "radial-gradient(ellipse at center top, rgba(224,123,42,0.04) 0%, transparent 70%)" }} />
 
         <div className="max-w-7xl mx-auto relative">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -516,7 +507,6 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              {/* AutoMate spotlight banner */}
               {isSpotlight && (
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{
@@ -549,12 +539,11 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
                 </div>
               )}
 
-              {/* Regular filter tags */}
               {isFiltered && (
                 <>
                   {[
-                    filters.brand !== "All Brands"    && filters.brand,
-                    filters.carType !== "All Types"   && filters.carType,
+                    filters.brand !== "All Brands"     && filters.brand,
+                    filters.carType !== "All Types"    && filters.carType,
                     filters.priceRange !== "Any Price" && filters.priceRange,
                     searchVal.trim() !== ""            && `"${searchVal}"`,
                   ].filter(Boolean).map(tag => (
@@ -567,7 +556,6 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
             </div>
           </div>
 
-          {/* Divider */}
           <div className="flex items-center gap-4 mb-8">
             <div className="h-px flex-1" style={{ background: isSpotlight ? "rgba(13,207,186,0.15)" : "rgba(255,255,255,0.05)" }} />
             <span className="text-[8px] text-gray-700 tracking-[0.3em] uppercase">
@@ -576,18 +564,15 @@ export default function CarGrid({ filters, searchVal, highlightCarId, onClearHig
             <div className="h-px flex-1" style={{ background: isSpotlight ? "rgba(13,207,186,0.15)" : "rgba(255,255,255,0.05)" }} />
           </div>
 
-          {/* Grid */}
           {displayedCars.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-3">
               <span className="text-4xl text-gray-800" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>NO RESULTS</span>
               <p className="text-gray-600 text-xs tracking-widest uppercase">Try adjusting your filters above</p>
             </div>
           ) : (
-            <div className={isSpotlight
-              ? "flex justify-center"
-              : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-            }
-            style={isSpotlight ? { width: "100%" } : {}}
+            <div
+              className={isSpotlight ? "flex justify-center" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"}
+              style={isSpotlight ? { width: "100%" } : {}}
             >
               {displayedCars.map(car => (
                 <div key={car.id} style={isSpotlight ? { width: "min(480px, 100%)" } : {}}>

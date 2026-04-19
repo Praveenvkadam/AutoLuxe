@@ -12,6 +12,22 @@ const filterConfig = [
   { key: "carType",    label: "Car Type",    icon: "◇" },
 ];
 
+export function parsePriceLakh(priceStr) {
+  const match = priceStr.replace(/[₹,\s]/g, "").match(/([\d.]+)L/i);
+  return match ? parseFloat(match[1]) : 0;
+}
+
+export function matchesPriceRange(priceStr, rangeLabel) {
+  if (rangeLabel === "Any Price") return true;
+  const val = parsePriceLakh(priceStr);
+  if (rangeLabel === "Under ₹15L")   return val < 15;
+  if (rangeLabel === "₹15L – ₹18L") return val >= 15 && val < 18;
+  if (rangeLabel === "₹18L – ₹22L") return val >= 18 && val < 22;
+  if (rangeLabel === "₹22L – ₹27L") return val >= 22 && val < 27;
+  if (rangeLabel === "₹27L+")        return val >= 27;
+  return true;
+}
+
 function ChevronIcon({ open }) {
   return (
     <svg
@@ -149,7 +165,6 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
           )}
         </div>
 
-        {/* overflow-hidden removed — was clipping dropdowns */}
         <div
           className="relative p-7 border border-white/[0.08] border-t-2"
           style={{
