@@ -66,6 +66,4 @@ In the `frontend` directory, you can run:
 
 The application uses React hooks for state management and follows modern React patterns. The UI is built with Tailwind CSS for a responsive and consistent design system.
 
-## License
 
-This project is open source and available under the [MIT License](LICENSE).
