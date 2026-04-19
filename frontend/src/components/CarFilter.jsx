@@ -1,15 +1,13 @@
 import { useRef, useEffect, useState } from "react";
 
 const filterData = {
-  brand: ["All Brands", "Porsche", "Ferrari", "Lamborghini", "Bentley", "Aston Martin", "McLaren", "Rolls-Royce"],
-  model: ["All Models", "911 Turbo S", "Cayenne", "Macan", "F8 Tributo", "Huracán", "Continental GT", "DB11", "720S"],
+  brand: ["All Brands", "Lamborghini", "Bentley", "Porsche", "Ferrari", "Bugatti", "Mercedes", "Rolls-Royce"],
   priceRange: ["Any Price", "Under $50K", "$50K – $100K", "$100K – $200K", "$200K – $500K", "$500K+"],
   carType: ["All Types", "Coupe", "Sedan", "SUV", "Mini-SUV", "Convertible", "Roadster", "Grand Tourer", "Hypercar"],
 };
 
 const filterConfig = [
   { key: "brand",      label: "Brand",       icon: "◈" },
-  { key: "model",      label: "Model",       icon: "◉" },
   { key: "priceRange", label: "Price Range", icon: "◆" },
   { key: "carType",    label: "Car Type",    icon: "◇" },
 ];
@@ -103,26 +101,24 @@ function Dropdown({ config, value, onChange }) {
   );
 }
 
-// ── Controlled component: all state lives in App.jsx ──────────
 export default function CarFilterPanel({ filters, setFilters, searchVal, setSearchVal }) {
-  const activeCount = Object.entries(filters).filter(([k, v]) => v !== filterData[k][0]).length;
+   const activeCount = Object.entries(filters).filter(([k, v]) => v !== filterData[k][0]).length;
 
-  const handleReset = () => {
-    setFilters({ brand: "All Brands", model: "All Models", priceRange: "Any Price", carType: "All Types" });
-    setSearchVal("");
-  };
+   const handleReset = () => {
+     setFilters({ brand: "All Brands", priceRange: "Any Price", carType: "All Types" });
+     setSearchVal("");
+   };
 
   return (
     <div className="flex items-center justify-center px-5 py-12" style={{ background: "#0c0c0c" }}>
       <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
 
       <div className="w-full max-w-5xl">
-        {/* Header */}
         <div className="flex items-end justify-between flex-wrap gap-3 mb-7">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2.5 text-orange-500 text-xs font-semibold tracking-widest uppercase" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-              <span className="w-8 h-px bg-orange-500 block" />
-              Find Your Vehicle
+               <span className="w-8 h-px bg-orange-500 block" />
+               Find Your Vehicle
             </div>
             <div className="flex items-baseline gap-2">
               <h2 className="text-4xl text-white tracking-widest leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
@@ -148,17 +144,15 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
           )}
         </div>
 
-        {/* Panel */}
         <div className="relative p-7 border border-white/[0.08] border-t-2 overflow-hidden"
           style={{ borderTopColor: "#e07b2a", background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)" }}>
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse at top left, rgba(224,123,42,0.05) 0%, transparent 60%)" }} />
           <div className="absolute bottom-0 right-0 w-14 h-14 border-t border-l border-orange-500/20" />
 
-          {/* Search */}
           <div className="mb-6">
             <div className="flex items-center gap-1.5 mb-2 text-gray-500 text-xs tracking-widest uppercase font-semibold" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-              <span className="text-orange-500">◈</span> Quick Search
+               <span className="text-orange-500">◈</span> Quick Search
             </div>
             <div className="relative">
               <input type="text" value={searchVal} onChange={(e) => setSearchVal(e.target.value)}
@@ -174,7 +168,6 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
             </div>
           </div>
 
-          {/* Dropdowns */}
           <div className="flex flex-wrap gap-4">
             {filterConfig.map((config) => (
               <Dropdown key={config.key} config={config} value={filters[config.key]}
@@ -182,7 +175,6 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
             ))}
           </div>
 
-          {/* Footer */}
           <div className="flex items-center justify-between flex-wrap gap-3 mt-6 pt-5 border-t border-white/[0.07]">
             <div className="flex items-center flex-wrap gap-2">
               {activeCount === 0 ? (

@@ -1,26 +1,6 @@
 import { useState, useEffect } from "react";
+import { allCars, badgeCfg } from "../data/cars.js";
 
-const allCars = [
-  { id: 1, type: "SUV",      brand: "Lamborghini",  model: "Urus S",            price: "$248,000", year: 2024, hp: "666 HP",  speed: "305", acc: "3.5", image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=800&q=80", badge: "NEW",    fuel: "Petrol"   },
-  { id: 2, type: "SUV",      brand: "Bentley",      model: "Bentayga EWB",      price: "$310,000", year: 2024, hp: "542 HP",  speed: "290", acc: "4.5", image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80", badge: "LUXURY", fuel: "Hybrid"   },
-  { id: 3, type: "Coupe",    brand: "Porsche",      model: "911 Turbo S",       price: "$216,000", year: 2024, hp: "650 HP",  speed: "330", acc: "2.7", image: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80", badge: "HOT",    fuel: "Petrol"   },
-  { id: 4, type: "Coupe",    brand: "Ferrari",      model: "F8 Tributo",        price: "$280,000", year: 2023, hp: "710 HP",  speed: "340", acc: "2.9", image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80", badge: "RARE",   fuel: "Petrol"   },
-  { id: 5, type: "Mini-SUV", brand: "Porsche",      model: "Macan GTS",         price: "$92,000",  year: 2024, hp: "440 HP",  speed: "272", acc: "4.3", image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80", badge: "NEW",    fuel: "Electric" },
-  { id: 6, type: "Mini-SUV", brand: "Buggati", model: "chiron",            price: "$239,000", year: 2024, hp: "707 HP",  speed: "310", acc: "3.3", image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80", badge: "SPORT",  fuel: "Petrol"   },
-  { id: 7, type: "Sedan",    brand: "Mercedes",     model: "AMG GT 63 S",       price: "$175,000", year: 2024, hp: "630 HP",  speed: "315", acc: "3.2", image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&q=80", badge: "ELITE",  fuel: "Petrol"   },
-  { id: 8, type: "Sedan",    brand: "Rolls-Royce",  model: "Ghost Black Badge", price: "$420,000", year: 2024, hp: "592 HP",  speed: "280", acc: "4.8", image: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=80", badge: "LUXURY", fuel: "Petrol"   },
-];
-
-const badgeCfg = {
-  NEW:    { bg: "bg-emerald-950", text: "text-emerald-400", border: "border-emerald-600/40" },
-  HOT:    { bg: "bg-orange-950",  text: "text-orange-400",  border: "border-orange-600/40"  },
-  RARE:   { bg: "bg-purple-950",  text: "text-purple-400",  border: "border-purple-600/40"  },
-  LUXURY: { bg: "bg-yellow-950",  text: "text-yellow-400",  border: "border-yellow-600/40"  },
-  SPORT:  { bg: "bg-red-950",     text: "text-red-400",     border: "border-red-600/40"     },
-  ELITE:  { bg: "bg-sky-950",     text: "text-sky-400",     border: "border-sky-600/40"     },
-};
-
-// parse helpers — all values in allCars are strings
 const parsePrice = (p) => Number(p.replace(/[$,]/g, ""));
 const parseHp    = (h) => Number(h.replace(" HP", ""));
 const parseNum   = (n) => Number(n);
@@ -179,12 +159,12 @@ export default function Comparison({ compareIds = [1, 3] }) {
   const [selectedIds, setSelectedIds] = useState(compareIds);
   const [visibleIds,  setVisibleIds]  = useState(compareIds);
   const [loading,     setLoading]     = useState(false);
-
+  
   useEffect(() => {
     setSelectedIds(compareIds);
     triggerLoad(compareIds);
   }, [compareIds[0], compareIds[1]]);
-
+  
   const triggerLoad = (newIds) => {
     setLoading(true);
     setTimeout(() => {
@@ -192,21 +172,22 @@ export default function Comparison({ compareIds = [1, 3] }) {
       setLoading(false);
     }, 600);
   };
-
+  
   const handleChange = (index, id) => {
     const newIds = [...selectedIds];
     newIds[index] = id;
     setSelectedIds(newIds);
     triggerLoad(newIds);
   };
-
+  
   const cars = visibleIds
     .map((id) => allCars.find((c) => c.id === id))
     .filter(Boolean);
-
+  
   return (
-    <div className="bg-[#0a0a0a] py-20 px-4 sm:px-6 lg:px-12">
+    <div id="compare-section" className="bg-[#0a0a0a] py-20 px-4 sm:px-6 lg:px-12">
       <div className="max-w-5xl mx-auto">
+
 
         <div className="mb-12 text-center">
           <p className="text-xs text-white/30 tracking-[0.2em] uppercase mb-3">Head to Head</p>
