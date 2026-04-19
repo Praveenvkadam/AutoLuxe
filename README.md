@@ -50,7 +50,7 @@ In the `frontend` directory, you can run:
 2. Navigate to the `frontend` directory
 3. Install dependencies: `npm install`
 4. Start development server: `npm run dev`
-5. Open [[http://localhost:5173](https://auto-luxe-iota.vercel.app/)]([http://localhost:5173](https://auto-luxe-iota.vercel.app/)) in your browser
+5. Open https://auto-luxe-iota.vercel.app/ in your browser
 
 ## Components
 
