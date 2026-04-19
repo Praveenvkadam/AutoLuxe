@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 
 const filterData = {
-  brand: ["All Brands", "Lamborghini", "Bentley", "Porsche", "Ferrari", "Bugatti", "Mercedes", "Rolls-Royce"],
-  priceRange: ["Any Price", "Under $50K", "$50K – $100K", "$100K – $200K", "$200K – $500K", "$500K+"],
-  carType: ["All Types", "Coupe", "Sedan", "SUV", "Mini-SUV", "Convertible", "Roadster", "Grand Tourer", "Hypercar"],
+  brand: ["All Brands", "Mahindra", "Kia", "Tata", "Skoda", "VW"],
+  priceRange: ["Any Price", "Under ₹15L", "₹15L – ₹18L", "₹18L – ₹22L", "₹22L – ₹27L", "₹27L+"],
+  carType: ["All Types", "SUV", "Mini-SUV", "Coupe", "Sedan"],
 };
 
 const filterConfig = [
@@ -40,7 +40,7 @@ function Dropdown({ config, value, onChange }) {
   const isDefault = value === filterData[config.key][0];
 
   return (
-    <div ref={ref} className="relative flex-1" style={{ minWidth: "180px" }}>
+    <div ref={ref} className="relative flex-1" style={{ minWidth: "180px", zIndex: open ? 50 : "auto" }}>
       <div className="flex items-center gap-1.5 mb-2">
         <span className="text-orange-500 text-xs">{config.icon}</span>
         <span className="text-gray-500 text-xs tracking-widest uppercase font-semibold" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
@@ -62,52 +62,57 @@ function Dropdown({ config, value, onChange }) {
         <ChevronIcon open={open} />
       </button>
 
-      <div
-        className={[
-          "absolute left-0 right-0 z-50 max-h-60 overflow-y-auto",
-          "border border-orange-500/30 border-t-2 border-t-orange-500 transition-all duration-200",
-          open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none",
-        ].join(" ")}
-        style={{ top: "calc(100% + 4px)", background: "#131313", boxShadow: "0 20px 60px rgba(0,0,0,0.7)", scrollbarWidth: "thin", scrollbarColor: "#e07b2a #1a1a1a" }}
-      >
-        {filterData[config.key].map((option) => {
-          const isSelected = value === option;
-          const isHov = hovered === option;
-          return (
-            <button
-              key={option}
-              onMouseEnter={() => setHovered(option)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => { onChange(option); setOpen(false); }}
-              className={[
-                "w-full flex items-center justify-between px-4 py-3 text-left text-xs outline-none border-l-2 transition-all duration-150",
-                isSelected ? "bg-orange-500/15 border-orange-500 text-orange-500 font-bold"
-                  : isHov   ? "bg-white/[0.04] border-transparent text-white"
-                  :           "bg-transparent border-transparent text-gray-500",
-              ].join(" ")}
-              style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.08em" }}
-            >
-              {option}
-              {isSelected && (
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none" className="flex-shrink-0">
-                  <path d="M1 4L3.5 6.5L9 1" stroke="#e07b2a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      {open && (
+        <div
+          className="absolute left-0 right-0 max-h-60 overflow-y-auto border border-orange-500/30 border-t-2 border-t-orange-500"
+          style={{
+            top: "calc(100% + 4px)",
+            background: "#131313",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.7)",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#e07b2a #1a1a1a",
+            zIndex: 9999,
+          }}
+        >
+          {filterData[config.key].map((option) => {
+            const isSelected = value === option;
+            const isHov = hovered === option;
+            return (
+              <button
+                key={option}
+                onMouseEnter={() => setHovered(option)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => { onChange(option); setOpen(false); }}
+                className={[
+                  "w-full flex items-center justify-between px-4 py-3 text-left text-xs outline-none border-l-2 transition-all duration-150",
+                  isSelected ? "bg-orange-500/15 border-orange-500 text-orange-500 font-bold"
+                    : isHov   ? "bg-white/[0.04] border-transparent text-white"
+                    :           "bg-transparent border-transparent text-gray-500",
+                ].join(" ")}
+                style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.08em" }}
+              >
+                {option}
+                {isSelected && (
+                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none" className="flex-shrink-0">
+                    <path d="M1 4L3.5 6.5L9 1" stroke="#e07b2a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 export default function CarFilterPanel({ filters, setFilters, searchVal, setSearchVal }) {
-   const activeCount = Object.entries(filters).filter(([k, v]) => v !== filterData[k][0]).length;
+  const activeCount = Object.entries(filters).filter(([k, v]) => v !== filterData[k][0]).length;
 
-   const handleReset = () => {
-     setFilters({ brand: "All Brands", priceRange: "Any Price", carType: "All Types" });
-     setSearchVal("");
-   };
+  const handleReset = () => {
+    setFilters({ brand: "All Brands", priceRange: "Any Price", carType: "All Types" });
+    setSearchVal("");
+  };
 
   return (
     <div className="flex items-center justify-center px-5 py-12" style={{ background: "#0c0c0c" }}>
@@ -117,8 +122,8 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
         <div className="flex items-end justify-between flex-wrap gap-3 mb-7">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2.5 text-orange-500 text-xs font-semibold tracking-widest uppercase" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-               <span className="w-8 h-px bg-orange-500 block" />
-               Find Your Vehicle
+              <span className="w-8 h-px bg-orange-500 block" />
+              Find Your Vehicle
             </div>
             <div className="flex items-baseline gap-2">
               <h2 className="text-4xl text-white tracking-widest leading-none" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
@@ -144,21 +149,31 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
           )}
         </div>
 
-        <div className="relative p-7 border border-white/[0.08] border-t-2 overflow-hidden"
-          style={{ borderTopColor: "#e07b2a", background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)" }}>
+        {/* overflow-hidden removed — was clipping dropdowns */}
+        <div
+          className="relative p-7 border border-white/[0.08] border-t-2"
+          style={{
+            borderTopColor: "#e07b2a",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
+          }}
+        >
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse at top left, rgba(224,123,42,0.05) 0%, transparent 60%)" }} />
-          <div className="absolute bottom-0 right-0 w-14 h-14 border-t border-l border-orange-500/20" />
+          <div className="absolute bottom-0 right-0 w-14 h-14 border-t border-l border-orange-500/20 pointer-events-none" />
 
           <div className="mb-6">
             <div className="flex items-center gap-1.5 mb-2 text-gray-500 text-xs tracking-widest uppercase font-semibold" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-               <span className="text-orange-500">◈</span> Quick Search
+              <span className="text-orange-500">◈</span> Quick Search
             </div>
             <div className="relative">
-              <input type="text" value={searchVal} onChange={(e) => setSearchVal(e.target.value)}
+              <input
+                type="text"
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
                 placeholder="Search by make, model, or keyword..."
                 className="w-full px-4 py-3 pr-11 text-sm text-white bg-white/[0.03] border border-white/10 border-b-2 border-b-white/10 placeholder-gray-700 outline-none focus:bg-orange-500/5 focus:border-orange-500 focus:border-b-orange-500 transition-all duration-200"
-                style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.06em" }} />
+                style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.06em" }}
+              />
               <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
@@ -170,8 +185,12 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
 
           <div className="flex flex-wrap gap-4">
             {filterConfig.map((config) => (
-              <Dropdown key={config.key} config={config} value={filters[config.key]}
-                onChange={(val) => setFilters((f) => ({ ...f, [config.key]: val }))} />
+              <Dropdown
+                key={config.key}
+                config={config}
+                value={filters[config.key]}
+                onChange={(val) => setFilters((f) => ({ ...f, [config.key]: val }))}
+              />
             ))}
           </div>
 
@@ -183,8 +202,11 @@ export default function CarFilterPanel({ filters, setFilters, searchVal, setSear
                 Object.entries(filters).filter(([k, v]) => v !== filterData[k][0]).map(([k, v]) => (
                   <span key={k} className="flex items-center gap-1.5 px-2.5 py-1 border border-orange-500/30 bg-orange-500/10 text-orange-500 text-xs font-semibold tracking-widest" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
                     {v}
-                    <button onClick={() => setFilters((f) => ({ ...f, [k]: filterData[k][0] }))}
-                      className="text-orange-500/70 hover:text-orange-500 transition-colors bg-transparent border-none cursor-pointer text-sm leading-none">×</button>
+                    <button
+                      onClick={() => setFilters((f) => ({ ...f, [k]: filterData[k][0] }))}
+                      className="text-orange-500/70 hover:text-orange-500 transition-colors bg-transparent border-none cursor-pointer text-sm leading-none">
+                      ×
+                    </button>
                   </span>
                 ))
               )}

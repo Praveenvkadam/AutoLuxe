@@ -9,13 +9,13 @@ export default function BookingModal({ car, onClose }) {
   const [particles, setParticles] = useState([]);
   const overlayRef = useRef(null);
 
-  // Trap scroll
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
 
-  // Dismiss on overlay click
+  
   function handleOverlayClick(e) {
     if (e.target === overlayRef.current) onClose();
   }
@@ -37,7 +37,7 @@ export default function BookingModal({ car, onClose }) {
       return;
     }
 
-    // Generate floating particles
+    
     setParticles(
       Array.from({ length: 10 }, (_, i) => ({
         id: i,

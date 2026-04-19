@@ -140,13 +140,13 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
           "--accent": sl.accent,
         }}
       >
-        {/* Top progress bar */}
+        
         <div
           className="absolute top-0 left-0 h-0.5 z-20"
           style={{ width: `${prog}%`, background: sl.accent, transition: "width .1s linear" }}
         />
 
-        {/* Slide track */}
+       
         <div
           className="ch-track flex h-full will-change-transform"
           style={{ transform: `translateX(-${cur * 100}%)` }}
@@ -159,7 +159,7 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
               }`}
               style={{ "--accent": s.accent }}
             >
-              {/* BG image */}
+            
               <div
                 className="ch-bg absolute inset-0 bg-cover"
                 style={{
@@ -168,8 +168,7 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                 }}
               />
 
-              {/* ✅ KEY FIX: justify-between spreads content across available space,
-                  font-size uses min(vw,vh) so tall slides shrink on short viewports */}
+             
               <div
                 className="ch-content relative z-[4] h-full flex flex-col justify-between"
                 style={{
@@ -178,9 +177,9 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                   paddingBottom: "clamp(80px, 14vh, 160px)",
                 }}
               >
-                {/* Top block: badge + title + subtitle */}
+                
                 <div className="flex flex-col">
-                  {/* Badge */}
+                  
                   <div
                     className="ch-anim ch-d1 inline-flex items-center gap-2"
                     style={{
@@ -199,7 +198,7 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                     {s.badge}
                   </div>
 
-                  {/* Title — ✅ min(vw, vh) prevents overflow on short screens */}
+                 
                   <h1
                     className="ch-anim ch-d2 text-white"
                     style={{
@@ -226,9 +225,8 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                   </p>
                 </div>
 
-                {/* Bottom block: specs or CTA — always pinned above the diagonal */}
+                
                 <div>
-                  {/* Intro specs (slide 1) */}
                   {s.type === "intro" && (
                     <div className="ch-anim ch-d4 flex">
                       {s.specs.map((sp, idx) => (
@@ -271,7 +269,6 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                     </div>
                   )}
 
-                  {/* CTA button (slides 2 & 3) */}
                   {(s.type === "testdrive" || s.type === "compare") && (
                     <div className="ch-anim ch-d4">
                       <button
@@ -296,7 +293,6 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
                 </div>
               </div>
 
-              {/* Bottom diagonal cut */}
               <div
                 className="ch-cut absolute bottom-[-2px] left-[-2px] right-[-2px] h-40 z-[3]"
                 style={{ background: "#0a0a0a" }}
@@ -305,7 +301,6 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
           ))}
         </div>
 
-        {/* Side counter */}
         <div
           className="ch-counter absolute top-1/2 -translate-y-1/2 z-[5] flex flex-col items-center gap-2"
           style={{ right: "5.5vw" }}
@@ -344,7 +339,6 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
           </span>
         </div>
 
-        {/* Dot navigation */}
         <div
           className="absolute z-[5] flex items-center gap-2"
           style={{ bottom: "32px", left: "7vw" }}
@@ -364,7 +358,6 @@ export default function CarHero({ onAccentChange, onBookTestDrive, onCompare }) 
           ))}
         </div>
 
-        {/* Prev / Next arrows */}
         <div
           className="absolute z-[5] flex gap-2"
           style={{ bottom: "24px", right: "5.5vw" }}

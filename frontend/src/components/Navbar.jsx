@@ -70,7 +70,6 @@ export default function Navbar({ accent = "#e63946", active, setActive }) {
     <>
       <style>{minimalCss}</style>
 
-      {/* ── Wrapper ── */}
       <div
         className="fixed top-0 left-0 right-0 z-[200] flex justify-center px-6 pt-[18px] pointer-events-none"
         style={{ "--nav-accent": accent }}
@@ -95,7 +94,6 @@ export default function Navbar({ accent = "#e63946", active, setActive }) {
             AUTO<span style={{ color: accent }}>LUXE</span>
           </span>
 
-          {/* Desktop nav links */}
           <div ref={containerRef} className="nav-links-desktop relative flex items-center gap-0.5">
             <span
               className="nav-slider-line absolute"
@@ -204,7 +202,6 @@ export default function Navbar({ accent = "#e63946", active, setActive }) {
           ))}
         </div>
 
-        {/* Sidebar footer CTA */}
         <div className="px-5 py-[18px] border-t border-white/[0.07]">
           <button
             className="w-full text-[12px] font-semibold tracking-[0.12em] uppercase text-white border-none rounded-lg py-[13px] px-5 cursor-pointer transition-opacity duration-200 hover:opacity-[0.88]"

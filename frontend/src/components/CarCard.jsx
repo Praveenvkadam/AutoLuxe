@@ -13,7 +13,7 @@ export default function CarCard({ car, visible, onBook }) {
         fontFamily: "'Rajdhani', sans-serif",
       }}
     >
-      {/* Image */}
+      
       <div className="relative h-48 overflow-hidden bg-black">
         <img
           src={car.image}
@@ -22,7 +22,7 @@ export default function CarCard({ car, visible, onBook }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-[#0f0f0f]/20 to-transparent" />
 
-        {/* Type + Badge */}
+        
         <div className="absolute top-0 left-0 right-0 flex items-start justify-between p-3">
           <div className="flex items-center gap-1.5 px-2.5 py-1 bg-black/70 backdrop-blur-md border border-white/10">
             <span className={`w-1.5 h-1.5 rounded-full ${typeCfg[car.type].dot}`} />
@@ -48,7 +48,6 @@ export default function CarCard({ car, visible, onBook }) {
         </div>
       </div>
 
-      {/* Body */}
       <div className="flex flex-col flex-1 p-4 gap-3.5">
         <div>
           <p className="text-[9px] font-bold tracking-[0.28em] uppercase text-gray-600 mb-1">{car.brand}</p>
@@ -60,7 +59,6 @@ export default function CarCard({ car, visible, onBook }) {
           </h3>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 divide-x divide-white/[0.06] border border-white/[0.06]">
           {[
             { label: "0–100 KM/H", value: car.acc,   unit: "S"     },
@@ -78,7 +76,6 @@ export default function CarCard({ car, visible, onBook }) {
 
         <div className="h-px w-full bg-white/[0.05]" />
 
-        {/* Price + CTA */}
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[8px] text-gray-600 tracking-widest uppercase mb-0.5">Starting from</p>
@@ -103,7 +100,6 @@ export default function CarCard({ car, visible, onBook }) {
         </div>
       </div>
 
-      {/* Bottom accent */}
       <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
     </div>
   );
